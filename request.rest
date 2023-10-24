@@ -1,0 +1,26 @@
+GET http://localhost:3003/videos
+###
+
+Post http://localhost:3003/videos
+Content-Type: application/json 
+
+{
+    "id": "v002",
+    "titulo": "Exercicio POO 2",
+    "duracao": 120 
+}
+###
+
+Put http://localhost:3003/videos/v002
+Content-Type: application/json 
+
+{
+    "newId": "v002",
+    "newTitulo": "Exercicio POO II",
+    "newDuracao": 320 
+}
+###
+
+DELETE http://localhost:3003/videos/v002
+Content-Type: application/json 
+###

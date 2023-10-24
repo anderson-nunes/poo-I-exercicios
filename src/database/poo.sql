@@ -1,0 +1,10 @@
+-- Active: 1698157479233@@127.0.0.1@3306
+
+CREATE TABLE videos (
+  id TEXT PRIMARY KEY UNIQUE NOT NULL,
+  titulo TEXTE NOT NULL,
+  duracao INTEGER NOT NULL,
+  data_upload TEXT DEFAULT (DATETIME()) NOT NULL
+);
+
+SELECT * FROM videos;
