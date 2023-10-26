@@ -125,34 +125,59 @@ app.put("/videos/:id", async (req: Request, res: Response) => {
     const newTitulo = req.body.newTitulo as string;
     const newDuracao = req.body.newDuracao as number;
 
-    const [idExists] = await db("videos").where({ id: idToEdit });
+    const [videoDB] = await db("videos").where({ id: idToEdit });
 
-    if (!idExists) {
+    if (!videoDB) {
       res.status(400);
       throw new Error("ID não existe");
     }
 
-    if (
-      typeof newId !== "string" ||
-      typeof newTitulo !== "string" ||
-      typeof newDuracao !== "number"
-    ) {
-      res.status(400);
-      throw new Error("Dados inválidos");
+    const video = new Videos(
+      videoDB.id,
+      videoDB.titulo,
+      videoDB.ducaração,
+      videoDB.data_upload
+    );
+
+    if (newId !== undefined) {
+      if (typeof newId !== "string") {
+        res.status(400);
+        throw new Error("'id' deve ser string");
+      }
     }
 
-    const updatedVideo: TVideos = {
-      id: newId,
-      titulo: newTitulo,
-      duracao: newDuracao,
-      data_upload: new Date().toISOString(),
+    if (newTitulo !== undefined) {
+      if (typeof newTitulo !== "string") {
+        res.status(400);
+        throw new Error("'título' deve ser string");
+      }
+    }
+
+    if (newDuracao !== undefined) {
+      if (typeof newDuracao !== "number") {
+        res.status(400);
+        throw new Error("'ducaração' deve ser number");
+      }
+    }
+
+    newId && video.setId(newId);
+
+    newTitulo && video.setTitulo(newTitulo);
+
+    newDuracao && video.setDuracao(newDuracao);
+
+    const newVideo: TVideos = {
+      id: video.getId(),
+      titulo: video.getTitulo(),
+      duracao: video.getDuracao(),
+      data_upload: video.getDataUpload(),
     };
 
-    await db("videos").where({ id: idToEdit }).update(updatedVideo);
+    await db("videos").where({ id: idToEdit }).update(newVideo);
 
     res
       .status(200)
-      .send({ message: "Video editado com sucesso", newVideo: updatedVideo });
+      .send({ message: "Video editado com sucesso", newVideo: newVideo });
   } catch (error) {
     console.log(error);
     res
@@ -165,14 +190,21 @@ app.delete("/videos/:id", async (req: Request, res: Response) => {
   try {
     const idToDelete = req.params.id;
 
-    const [idExists] = await db("videos").where({ id: idToDelete });
+    const [videoDB] = await db("videos").where({ id: idToDelete });
 
-    if (!idExists) {
+    if (!videoDB) {
       res.status(400);
       throw new Error("ID não existe");
     }
 
-    await db("videos").delete().where({ id: idToDelete });
+    const video = new Videos(
+      videoDB.id,
+      videoDB.titulo,
+      videoDB.ducaração,
+      videoDB.data_upload
+    );
+
+    await db("videos").delete().where({ id: video.getId() });
 
     res
       .status(200)

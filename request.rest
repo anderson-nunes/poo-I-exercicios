@@ -11,13 +11,13 @@ Content-Type: application/json
 }
 ###
 
-Put http://localhost:3003/videos/v002
+Put http://localhost:3003/videos/v003
 Content-Type: application/json 
 
 {
     "newId": "v002",
-    "newTitulo": "Exercicio POO II",
-    "newDuracao": 320 
+    "newTitulo": "Exercicio alterado",
+    "newDuracao": 120 
 }
 ###
 
